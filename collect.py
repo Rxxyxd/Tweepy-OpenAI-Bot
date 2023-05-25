@@ -9,46 +9,49 @@ openai.api_key = os.environ.get('openai_api_key')
 
 tweets = []
 process_count = 60
-target_tweets = 600
+target_tweets = 600 #Must be a multiple of 60
 filename = "tweets.csv"
-
-def ask_gpt(prompt):
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=prompt,
-        temperature=0.7,
-        max_tokens=100,
-        n=1,
-        stop=None,
-        timeout=10
-    )
-    return response.choices[0].text.strip()
-
-def get_tweets():
-    try:
-        tweet = ask_gpt("Give me a motivational tweet")
-        tweets.append(tweet)
-    except Exception as e:
-        print(e)
-    return tweets
-
 results_queue = multiprocessing.Queue()
 
-def run_get_tweets_with_queue(func, queue):
+def get_response(topic): #Connects to OpenAI API and returns the response
+    try:
+        q = "Give me a "+topic+" tweet"
+        response = openai.Completion.create(
+            engine="text-davinci-003", #OpenAI Model
+            prompt=q,
+            temperature=0.7,
+            max_tokens=100,
+            n=1,
+            stop=None,
+            timeout=10
+        )
+        return response.choices[0].text.strip()
+    except Exception as e:
+        print(e)
+
+def get_tweets(): #uses what get_response() returned, adds to list and returns the list
+    try:
+        tweet = get_response("motivational")
+        tweets.append(tweet)
+        return tweets
+    except Exception as e:
+        print(e)
+
+def run_get_tweets_with_queue(func, queue): # starts a queue for the information returned from each process
     result = func()
     queue.put(result)
 
 def run_get_tweets():
-    start = time.time()
     tweets = []
     processes = []
+    current_batch = 0
     while len(tweets) != target_tweets:
-        batch_num = target_tweets / 60
-        current_batch = 0
-        if current_batch != batch_num: 
+        batch_num = target_tweets / 60 #defines number of times to run loop
+        if current_batch <= batch_num: 
             current_batch +=1
+        else: break #breaks out of while loop if batch_num is equal to target_tweets
         print("Batch ",current_batch)
-        for _ in range(process_count):
+        for _ in range(process_count): #runs defines number of processes for the specified function
             process = multiprocessing.Process(target=run_get_tweets_with_queue, args=(get_tweets, results_queue))
             processes.append(process)
             process.start()
@@ -56,18 +59,16 @@ def run_get_tweets():
     
         for process in processes:
             process.join()
-            print(process)
+            print(process) #not required but helps with debugging
         
-        while not results_queue.empty():
+        while not results_queue.empty(): #apends each returned tweet to the list of tweets
             tweets.append(results_queue.get())
     
         time.sleep(60)
     
-    with open(filename, 'w', newline="", encoding="utf-8") as csvfile:
+    with open(filename, 'w', newline="", encoding="utf-8") as csvfile: #adds liost of tweets to csv file
         writer = csv.writer(csvfile)
         writer.writerow(tweets)
     
-    listlen = len(tweets)
-    print(listlen, "tweets collected")
-    end = time.time()
-    print(end - start, "seconds")
+    tweets_len = len(tweets)
+    print(tweets_len, "tweets collected") # Outputs the number of tweets collected (Not Required but helps with debugging)

@@ -14,7 +14,7 @@ bearer_token = os.environ.get("bearer_token")
 
 tweets = []
 
-def open_csv(filename):
+def open_csv(filename): #Opens CSV file and returns a list of tweets
     with open(filename, 'r', encoding="utf-8") as f:
             reader = csv.reader(f)
             for row in reader:
@@ -33,7 +33,7 @@ def open_csv(filename):
                     exists = False
             tweet = ''.join(tweets[rand])
             return tweet
-def tweet():
+def tweet(): #Connects to Twitter API V2 and creates a tweet with the content of the CSV file
     client = tweepy.Client(bearer_token=bearer_token , consumer_key=consumer_key, consumer_secret=consumer_secret, access_token=access_token, access_token_secret=access_token_secret)
     tweet=open_csv("tweets.csv")
     client.create_tweet(text=tweet)
