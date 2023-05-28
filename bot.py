@@ -2,15 +2,15 @@ import tweepy
 import csv
 import random
 import ast
-from dotenv import load_dotenv
-load_dotenv()
-import os
+import config_helper
 
-consumer_key = os.environ.get("consumer_key")
-consumer_secret = os.environ.get("consumer_secret")
-access_token = os.environ.get("access_token")
-access_token_secret = os.environ.get("access_token_secret")
-bearer_token = os.environ.get("bearer_token")
+config = config_helper.read_config()
+
+consumer_key = config["API-Keys"]["consumer_key"]
+consumer_secret = config["API-Keys"]["consumer_secret"]
+access_token = config["API-Keys"]["access_token"]
+access_token_secret = config["API-Keys"]["access_token_secret"]
+bearer_token = config["API-Keys"]["bearer_token"]
 
 tweets = []
 
