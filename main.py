@@ -1,10 +1,19 @@
-import collect
+# 3rd Party Packages
 import os
-import bot
+from os.path import exists
 import time
 import sys
 
+# Scripts 
+import collect
+import bot
+
 if __name__ == '__main__':
+    config_exists = exists("configurations.ini")
+    if config_exists:
+        print("Found Config File")
+    else:
+        print("Generate config")
     while True:
         file_exist = os.path.isfile('tweets.csv')
         if not file_exist:
