@@ -4,7 +4,7 @@ A Twitter bot that uses OpenAI's API to generate a specified number of "Motivati
 NOTE: This is a hobby project, there will probably be bugs or bad code.
 
 # Set-up
-Be to create a .env file for your keys. The file should look like this:
+You will need to create a .env file for your keys. The file should look like this:
 ```
 consumer_key = ""
 consumer_secret = ""
