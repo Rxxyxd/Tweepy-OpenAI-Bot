@@ -15,7 +15,7 @@ if you havent already generated tweets.csv then it will generate 600 tweets by d
 After the tweets are generated it will tweet one per hour by default
 
 
-To build the docker image simply run:
+To build the docker image run:
 `$ docker build -t tweepyopenai:v0.01 .`
 NOTE: **You may want to run the script once before building the docker image so that your config file and API Keys are saved - This may change in the future.**
 
