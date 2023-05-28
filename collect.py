@@ -2,19 +2,18 @@ import openai
 import time
 import multiprocessing
 import csv
-from dotenv import load_dotenv
-load_dotenv()
-import os
-openai.api_key = os.environ.get('openai_api_key')
+import config
+
+config = config.read()
 
 tweets = []
 process_count = 60
-target_tweets = 600 #Must be a multiple of 60
 filename = "tweets.csv"
 results_queue = multiprocessing.Queue()
 
 def get_response(topic): #Connects to OpenAI API and returns the response
     try:
+        openai.api_key = config['API-Keys']['openaiApiKey']
         q = "Give me a "+topic+" tweet"
         response = openai.Completion.create(
             engine="text-davinci-003", #OpenAI Model
@@ -41,7 +40,7 @@ def run_get_tweets_with_queue(func, queue): # starts a queue for the information
     result = func()
     queue.put(result)
 
-def run_get_tweets():
+def run_get_tweets(target_tweets):
     tweets = []
     processes = []
     current_batch = 0
@@ -49,9 +48,9 @@ def run_get_tweets():
         batch_num = target_tweets / 60 #defines number of times to run loop
         if current_batch <= batch_num: 
             current_batch +=1
-        else: break #breaks out of while loop if batch_num is equal to target_tweets
+        else: break # breaks out of while loop if batch_num is equal to target_tweets
         print("Batch ",current_batch)
-        for _ in range(process_count): #runs defines number of processes for the specified function
+        for _ in range(process_count): #runs defined number of processes for the specified function
             process = multiprocessing.Process(target=run_get_tweets_with_queue, args=(get_tweets, results_queue))
             processes.append(process)
             process.start()

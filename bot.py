@@ -2,19 +2,12 @@ import tweepy
 import csv
 import random
 import ast
-import config_helper
+import config
 
-config = config_helper.read_config()
-
-consumer_key = config["API-Keys"]["consumer_key"]
-consumer_secret = config["API-Keys"]["consumer_secret"]
-access_token = config["API-Keys"]["access_token"]
-access_token_secret = config["API-Keys"]["access_token_secret"]
-bearer_token = config["API-Keys"]["bearer_token"]
-
-tweets = []
+config = config.read()
 
 def open_csv(filename): #Opens CSV file and returns a list of tweets
+    tweets = []
     with open(filename, 'r', encoding="utf-8") as f:
             reader = csv.reader(f)
             for row in reader:
@@ -32,8 +25,13 @@ def open_csv(filename): #Opens CSV file and returns a list of tweets
                 else:
                     exists = False
             tweet = ''.join(tweets[rand])
-            return tweet
+            return tweet    
 def tweet(): #Connects to Twitter API V2 and creates a tweet with the content of the CSV file
+    consumer_key = config["API-Keys"]["consumerKey"]
+    consumer_secret = config["API-Keys"]["consumerSecret"]
+    access_token = config["API-Keys"]["accessToken"]
+    access_token_secret = config["API-Keys"]["accessTokenSecret"]
+    bearer_token = config["API-Keys"]["bearerToken"]
     client = tweepy.Client(bearer_token=bearer_token , consumer_key=consumer_key, consumer_secret=consumer_secret, access_token=access_token, access_token_secret=access_token_secret)
     tweet=open_csv("tweets.csv")
     client.create_tweet(text=tweet)
