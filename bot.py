@@ -15,12 +15,12 @@ def open_csv(filename): #Opens CSV file and returns a list of tweets
                     content = row[i]
                     content_list = ast.literal_eval(content)
                     tweets.append(content_list)
-            rand = random.randint(0, 599)
+            rand = random.randint(0, int(config["Tweet-Settings"]["tweetCount"])-1)
             used_index = []
             exists = True
             while exists:
                 if rand in used_index:
-                    rand = random.randint(0, 599)
+                    rand = random.randint(0, int(config["Tweet-Settings"]["tweetCount"])-1)
                     continue
                 else:
                     exists = False

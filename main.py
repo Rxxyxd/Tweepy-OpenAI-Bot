@@ -23,8 +23,8 @@ if __name__ == '__main__':
         else:
             bot.tweet()
             print("Waiting 1 hour")
-            for i in range(0, 3600):
+            for i in range(0, int(config["Tweet-Settings"]["tweetFrequency"])):
                 sys.stdout.write(str(i)+'\r')
                 sys.stdout.flush()
-                time.sleep(int(config["Tweet-Settings"]["tweetFrequency"]))
+                time.sleep(1)
             

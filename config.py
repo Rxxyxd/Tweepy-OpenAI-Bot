@@ -36,6 +36,6 @@ def create():
 
 # Opens the config file and returns its contents
 def read():
-    config = configparser.ConfigParser()
+    config = configparser.ConfigParser(interpolation=None)
     config.read('configurations.ini')
     return config
