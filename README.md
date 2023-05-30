@@ -31,5 +31,7 @@ The tweet count can be as large as you like but has to be a multiple of 60. **NO
 **tweetFrequency is in seconds, REMEMBER that twitter has a limit on how many times you can tweet per day.**
 
 
-## Issues
+## Contributions / Contact
+Contributions are welcome!
 If you come up on any issues or suggestions feel free to drop them on the issues page!
+Contact email: Joshuaabbey2022@gmail.com
